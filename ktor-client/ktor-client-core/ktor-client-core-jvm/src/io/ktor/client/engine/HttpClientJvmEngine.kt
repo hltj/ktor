@@ -7,7 +7,7 @@ import kotlin.coroutines.*
 
 @UseExperimental(InternalAPI::class)
 abstract class HttpClientJvmEngine(engineName: String) : HttpClientEngine {
-    private val supervisor = OneWayJob()
+    private val supervisor = SupervisorJob()
 
     override val dispatcher: ExperimentalCoroutineDispatcher by lazy {
         ExperimentalCoroutineDispatcher(config.threadsCount)
@@ -20,7 +20,7 @@ abstract class HttpClientJvmEngine(engineName: String) : HttpClientEngine {
     protected fun createCallContext() = coroutineContext + CompletableDeferred<Unit>(coroutineContext[Job])
 
     override fun close() {
-        supervisor.cancel(PoisonException("Graceful close"))
+        supervisor.cancel()
         supervisor.invokeOnCompletion {
             dispatcher.close()
         }

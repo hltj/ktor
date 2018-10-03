@@ -22,7 +22,7 @@ class IosClientEngine(override val config: HttpClientEngineConfig) : HttpClientE
     // TODO: replace with UI dispatcher
     override val dispatcher: CoroutineDispatcher = Dispatchers.Unconfined
 
-    override val coroutineContext: CoroutineContext = dispatcher + OneWayJob()
+    override val coroutineContext: CoroutineContext = dispatcher + SupervisorJob()
 
     override suspend fun execute(
         call: HttpClientCall,
@@ -107,7 +107,7 @@ class IosClientEngine(override val config: HttpClientEngineConfig) : HttpClientE
     }
 
     override fun close() {
-        coroutineContext.cancel(PoisonException("Graceful close"))
+        coroutineContext.cancel()
     }
 }
 
