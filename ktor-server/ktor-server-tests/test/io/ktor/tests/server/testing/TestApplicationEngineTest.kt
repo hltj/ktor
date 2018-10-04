@@ -8,7 +8,6 @@ import io.ktor.routing.*
 import io.ktor.server.testing.*
 import io.ktor.sessions.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.timeunit.*
 import org.junit.Test
 import kotlin.coroutines.*
 import kotlin.system.*
@@ -43,7 +42,6 @@ class TestApplicationEngineTest {
                     dispatcher = Dispatchers.Unconfined.withDelay(object : Delay {
                         override fun scheduleResumeAfterDelay(
                             time: Long,
-                            unit: TimeUnit,
                             continuation: CancellableContinuation<Unit>
                         ) {
                             // Run immediately and log it
