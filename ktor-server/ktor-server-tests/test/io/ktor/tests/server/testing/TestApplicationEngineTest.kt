@@ -43,7 +43,7 @@ class TestApplicationEngineTest {
                     dispatcher = Dispatchers.Unconfined.withDelay(object : Delay {
                         override fun scheduleResumeAfterDelay(
                                 time: Long,
-                                unit: TimeUnit,
+
                                 continuation: CancellableContinuation<Unit>
                         ) {
                             // Run immediately and log it
