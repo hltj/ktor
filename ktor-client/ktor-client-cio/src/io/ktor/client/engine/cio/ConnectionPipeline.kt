@@ -20,8 +20,10 @@ internal class ConnectionPipeline(
     socket: Socket,
     tasks: Channel<RequestTask>,
     val createCallContext: () -> CoroutineContext,
-    override val coroutineContext: CoroutineContext
+    parentContext: CoroutineContext
 ) : CoroutineScope {
+    override val coroutineContext: CoroutineContext = parentContext + Job()
+
     private val inputChannel = socket.openReadChannel()
     private val outputChannel = socket.openWriteChannel()
     private val requestLimit = Semaphore(pipelineMaxSize)
