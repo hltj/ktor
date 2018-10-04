@@ -81,7 +81,6 @@ class ActorSelectorManager(dispatcher: CoroutineContext) : SelectorManagerSuppor
 
     private suspend fun select(selector: Selector): Int {
         inSelect = true
-        dispatchIfNeeded()
         return if (wakeup.get() == 0L) {
             val count = selector.select(500L)
             inSelect = false
@@ -91,12 +90,6 @@ class ActorSelectorManager(dispatcher: CoroutineContext) : SelectorManagerSuppor
             wakeup.set(0)
             selector.selectNow()
         }
-    }
-
-    private suspend inline fun dispatchIfNeeded() {
-        yield() // it will always redispatch it to the right thread
-        // it is very important here because we do _unintercepted_ resume that may lead to blocking on a wrong thread
-        // that may cause deadlock
     }
 
     private fun selectWakeup() {
@@ -168,7 +161,7 @@ class ActorSelectorManager(dispatcher: CoroutineContext) : SelectorManagerSuppor
         fun resume(value: R): Boolean {
             val continuation = ref.getAndSet(null)
             if (continuation != null) {
-                continuation.resume(value) /** we resume unintercepted, see [dispatchIfNeeded] */
+                continuation.intercepted().resume(value)
                 return true
             }
 
