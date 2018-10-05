@@ -116,7 +116,7 @@ class TestApplicationEngine(
                 pipeline.execute(call)
                 pipelineExecuted.complete(Unit)
             } catch (cause: Throwable) {
-                pipelineExecuted.completeExceptionally(cause)
+                pipelineExecuted.cancel(cause)
             }
         }
         processResponse(call)

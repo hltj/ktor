@@ -95,7 +95,7 @@ fun CoroutineScope.httpServer(settings: HttpServerSettings,
     }
 
     acceptJob.invokeOnCompletion { t ->
-        t?.let { socket.completeExceptionally(it) }
+        t?.let { socket.cancel(it) }
         serverLatch.complete(Unit)
         timeout.process()
     }
