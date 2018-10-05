@@ -88,7 +88,7 @@ internal class NettyHttp1Handler(private val enginePipeline: EnginePipeline,
             configured = false
             ctx.pipeline().apply {
 //                remove(RequestBodyHandler::class.java)
-                remove(NettyApplicationCallHandler::class.java)
+//                remove(NettyApplicationCallHandler::class.java)
             }
 
             requestQueue.cancel()
